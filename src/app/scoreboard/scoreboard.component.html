@@ -1,0 +1,72 @@
+<div>
+  <div class="center" *ngIf="!gameStarted">
+    <div class="row">
+      <div class="col">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>How many players?</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem (click)="createPlayernameInputs(3)">3</button>
+            <button ngbDropdownItem (click)="createPlayernameInputs(4)">4</button>
+            <button ngbDropdownItem (click)="createPlayernameInputs(5)">5</button>
+            <button ngbDropdownItem (click)="createPlayernameInputs(6)">6</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form (submit)="startGame()">
+      <div class="form-group" *ngFor="let number of numbers; let i = index">
+        <input name="input" type="text" class="form-control" [(ngModel)]="model[i]" ng-required ="true" />
+      </div>
+      <div>
+        <button class="btn btn-primary">Start Game</button>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="gameStarted">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th *ngFor="let player of players">{{player.name}} ({{player.phase}})</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let hand of hands">
+          <td *ngFor="let player of hand.players">{{player.score}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add the scores for each player</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    </button>
+  </div>
+  <div class="modal-body">
+    <form (submit)="endHand()">
+      <div class="form-group" *ngFor="let number of numbers; let i = index">
+        <p>
+          {{players[i].name}}
+        </p>
+        <input name="input" type="number" class="form-control" [(ngModel)]="handModel[i]" required />
+      </div>
+      <button class="btn btn-primary">Add Scores</button>
+    </form>
+  </div>
+</ng-template>
+
+<div *ngIf="gameStarted" class="fixedbutton">
+  <button (click)="open(content)">
+    End Hand
+  </button>
+  <button (click)="undoHand()">
+    Undo last hand
+  </button>
+</div>
+
+
+
+
+
